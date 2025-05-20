@@ -1,0 +1,5 @@
+run_unit_test:
+  stage: test
+  image: gradle:8.0.2
+  script:
+    - gradle clean test
