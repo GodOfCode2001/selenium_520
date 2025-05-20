@@ -1,10 +1,10 @@
 ## Option 1:
-下载Java
-配置Java
-下载Gradle
-配置Gradle
-cd tests/mytest
-gradle test
+### 下载Java
+### 配置Java
+### 下载Gradle
+### 配置Gradle
+### cd tests/mytest
+### gradle test
 
 ## Option 2:
 ### Step 1:
