@@ -3,92 +3,92 @@ package pages;
 import org.openqa.selenium.*;
 
 /**
- * 保险经纪系统登录页面对象
+ * Insurance Broker System Login Page Object
  */
 public class LoginPage extends BasePage {
-    // 页面URL
+    // Page URL
     private static final String PAGE_URL = "https://demo.guru99.com/insurance/v1/index.php";
     
-    // 登录表单元素
+    // Login form elements
     private By emailInputLocator = By.id("email");
     private By passwordInputLocator = By.id("password");
     private By loginButtonLocator = By.name("submit");
     private By registerLinkLocator = By.linkText("Register");
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public LoginPage(WebDriver driver) {
         super(driver);
     }
 
     /**
-     * 打开登录页面
+     * Open login page
      */
     public LoginPage openPage() {
         driver.get(PAGE_URL);
-        System.out.println("已打开登录页面: " + PAGE_URL);
+        System.out.println("Opened login page: " + PAGE_URL);
         return this;
     }
     
     /**
-     * 输入邮箱
+     * Enter email
      */
     public LoginPage enterEmail(String email) {
         enterText(emailInputLocator, email);
-        System.out.println("已输入邮箱: " + email);
+        System.out.println("Entered email: " + email);
         return this;
     }
     
     /**
-     * 输入密码
+     * Enter password
      */
     public LoginPage enterPassword(String password) {
         enterText(passwordInputLocator, password);
-        System.out.println("已输入密码");
+        System.out.println("Entered password");
         return this;
     }
     
     /**
-     * 点击登录按钮
+     * Click login button
      */
     public void clickLogin() {
         try {
             clickElement(loginButtonLocator);
-            System.out.println("已点击登录按钮");
+            System.out.println("Clicked login button");
         } catch (Exception e) {
-            System.err.println("点击登录按钮失败，尝试使用JavaScript点击: " + e.getMessage());
+            System.err.println("Failed to click login button, trying JavaScript click: " + e.getMessage());
             jsClick(loginButtonLocator);
         }
     }
     
     /**
-     * 执行登录
+     * Perform login
      */
     public void login(String email, String password) {
         enterEmail(email);
         enterPassword(password);
         clickLogin();
         
-        // 等待登录完成，页面应该变化
+        // Wait for login to complete, page should change
         try {
-            Thread.sleep(2000); // 短暂等待以确保页面加载
+            Thread.sleep(2000); // Brief wait to ensure page loads
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
     
     /**
-     * 点击注册链接
+     * Click register link
      */
     public void clickRegister() {
         clickElement(registerLinkLocator);
-        System.out.println("已点击注册链接");
+        System.out.println("Clicked register link");
     }
     
     /**
-     * 检查是否在登录页面
+     * Check if on login page
      */
     public boolean isOnLoginPage() {
         try {

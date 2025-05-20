@@ -34,35 +34,22 @@ public class Guru99Tests {
     private HoverPage hoverPage;
     private HistoryTestPage historyTestPage;
 
-    // 测试账户信息
+    // Test account information
     private final String TEST_EMAIL = "test" + System.currentTimeMillis() + "@example.com";
     private final String TEST_PASSWORD = "Password123";
     private final String EXISTING_EMAIL = "test1234@example.com"; 
     private final String EXISTING_PASSWORD = "password123";
 
     @Before
-    public void setup() {
-        // 设置WebDriver
-        WebDriverManager.chromedriver().setup();
+    public void setUp() {
+        // 使用WebDriverFactory创建WebDriver
+        this.driver = WebDriverFactory.createDriver();
         
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
         
-        try {
-            this.driver = new ChromeDriver(options);
-        } catch (SessionNotCreatedException e) {
-            // 如果Chrome失败，尝试使用Firefox
-            WebDriverManager.firefoxdriver().setup();
-            this.driver = new FirefoxDriver();
-        }
-        
-        this.driver.manage().window().maximize();
-        
-        // 初始化页面对象
+        // Initialize page objects
         this.loginPage = new LoginPage(driver);
         this.formPage = new FormPage(driver);
         this.fileUploadPage = new FileUploadPage(driver);
-        this.loginPage = new LoginPage(driver);
         this.registerPage = new RegisterPage(driver);
         this.homePage = new HomePage(driver);
         this.cookieManager = new CookieManager(driver);
@@ -72,113 +59,113 @@ public class Guru99Tests {
     }
 
     /**
-     * 测试注册、登录和登出的完整流程
+     * Test complete flow of registration, login and logout
      */
     @Test
     public void testRegisterLoginAndLogout() {
-        System.out.println("开始测试: 注册、登录和登出流程");
+        System.out.println("Starting test: Registration, login and logout flow");
         
-        // 步骤1: 注册新用户
+        // Step 1: Register new user
         registerPage.openPage();
         registerPage.registerUser(TEST_EMAIL, TEST_PASSWORD);
         
-        // 验证重定向到登录页面
-        assertTrue("注册后应重定向到登录页面", loginPage.isOnLoginPage());
+        // Verify redirect to login page
+        assertTrue("After registration should redirect to login page", loginPage.isOnLoginPage());
         
-        // 步骤2: 使用新注册的账号登录
+        // Step 2: Login with newly registered account
         loginPage.login(TEST_EMAIL, TEST_PASSWORD);
         
-        // 验证登录成功
-        assertTrue("应该成功登录", homePage.isLoggedIn());
-        assertEquals("登录用户邮箱应匹配", TEST_EMAIL, homePage.getLoggedInEmail());
+        // Verify successful login
+        assertTrue("Should be successfully logged in", homePage.isLoggedIn());
+        assertEquals("Logged in user email should match", TEST_EMAIL, homePage.getLoggedInEmail());
         
-        // 步骤3: 退出登录
+        // Step 3: Logout
         homePage.logout();
         
-        // 验证登出成功
-        assertTrue("登出后应返回到登录页面", loginPage.isOnLoginPage());
+        // Verify successful logout
+        assertTrue("After logout should return to login page", loginPage.isOnLoginPage());
         
-        System.out.println("测试完成: 注册、登录和登出流程");
+        System.out.println("Test completed: Registration, login and logout flow");
     }
     
     /**
-     * 测试表单元素交互
+     * Test form element interactions
      */
     @Test
     public void testFormInteractions() {
         formPage.openPage();
-        System.out.println("已打开单选按钮和复选框测试页面");
+        System.out.println("Opened radio button and checkbox test page");
         
         try {
-            // 选择单选按钮 Option 2
+            // Select radio button Option 2
             formPage.selectRadioButton(2);
             
-            // 勾选复选框1和复选框3
+            // Check checkbox 1 and checkbox 3
             formPage.toggleCheckbox(1, true);
             formPage.toggleCheckbox(3, true);
             
-            // 验证单选按钮状态
-            assertTrue("单选按钮2应该被选中", formPage.isRadioButtonSelected(2));
-            assertFalse("单选按钮1不应该被选中", formPage.isRadioButtonSelected(1));
-            assertFalse("单选按钮3不应该被选中", formPage.isRadioButtonSelected(3));
+            // Verify radio button status
+            assertTrue("Radio button 2 should be selected", formPage.isRadioButtonSelected(2));
+            assertFalse("Radio button 1 should not be selected", formPage.isRadioButtonSelected(1));
+            assertFalse("Radio button 3 should not be selected", formPage.isRadioButtonSelected(3));
             
-            // 验证复选框状态
-            assertTrue("复选框1应该被选中", formPage.isCheckboxSelected(1));
-            assertFalse("复选框2不应该被选中", formPage.isCheckboxSelected(2));
-            assertTrue("复选框3应该被选中", formPage.isCheckboxSelected(3));
+            // Verify checkbox status
+            assertTrue("Checkbox 1 should be selected", formPage.isCheckboxSelected(1));
+            assertFalse("Checkbox 2 should not be selected", formPage.isCheckboxSelected(2));
+            assertTrue("Checkbox 3 should be selected", formPage.isCheckboxSelected(3));
             
-            // 取消选中复选框3
+            // Uncheck checkbox 3
             formPage.toggleCheckbox(3, false);
-            assertFalse("复选框3应该被取消选中", formPage.isCheckboxSelected(3));
+            assertFalse("Checkbox 3 should be unchecked", formPage.isCheckboxSelected(3));
             
-            System.out.println("表单交互测试成功");
+            System.out.println("Form interaction test successful");
         } catch (Exception e) {
-            System.out.println("表单交互测试失败: " + e.getMessage());
-            fail("表单交互测试失败: " + e.getMessage());
+            System.out.println("Form interaction test failed: " + e.getMessage());
+            fail("Form interaction test failed: " + e.getMessage());
         }
     }
     
     /**
-     * 测试文件上传
+     * Test file upload
      */
     @Test
     public void testFileUpload() {
-        // 创建临时测试文件
+        // Create temporary test file
         String tempFilePath = createTempTextFile();
-        assertNotNull("应该成功创建临时文件", tempFilePath);
+        assertNotNull("Should successfully create temporary file", tempFilePath);
         
-        // 打开上传页面
+        // Open upload page
         fileUploadPage.openPage();
         
-        // 上传文件
+        // Upload file
         fileUploadPage.uploadFile(tempFilePath);
         
-        // 验证上传成功
+        // Verify successful upload
         boolean uploadSuccess = fileUploadPage.isUploadSuccessful();
         String resultMessage = fileUploadPage.getResultMessage();
         
-        assertTrue("文件应该成功上传", uploadSuccess);
-        System.out.println("上传结果: " + resultMessage);
+        assertTrue("File should be uploaded successfully", uploadSuccess);
+        System.out.println("Upload result: " + resultMessage);
     }
 
     /**
-     * 创建临时文本文件用于测试
-     * @return 创建的临时文件路径
+     * Create temporary text file for testing
+     * @return Path of the created temporary file
      */
     private String createTempTextFile() {
         try {
             File tempFile = File.createTempFile("upload-test-", ".txt");
-            tempFile.deleteOnExit(); // 确保测试结束后删除
-            System.out.println("已创建临时文件: " + tempFile.getAbsolutePath());
+            tempFile.deleteOnExit(); // Ensure deletion after test
+            System.out.println("Created temporary file: " + tempFile.getAbsolutePath());
             return tempFile.getAbsolutePath();
         } catch (Exception e) {
-            System.out.println("创建临时文件失败: " + e.getMessage());
+            System.out.println("Failed to create temporary file: " + e.getMessage());
             return null;
         }
     }
 
     /**
-     * 测试多页面标题
+     * Test multiple page titles
      */
     @Test
     public void testMultipleStaticPages() {
@@ -189,7 +176,7 @@ public class Guru99Tests {
         };
         
         String[][] expectedTitleKeywords = new String[][] {
-            {"DatePicker", "Demo", "Date"}, // 多个可能的关键词
+            {"DatePicker", "Demo", "Date"}, // Multiple possible keywords
             {"Drag", "Drop"}, 
             {"Register", "Mercury", "Tours"}
         };
@@ -197,15 +184,15 @@ public class Guru99Tests {
         for (int i = 0; i < pageUrls.length; i++) {
             try {
                 driver.get(pageUrls[i]);
-                // 等待页面加载
+                // Wait for page to load
                 new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(webDriver -> ((JavascriptExecutor) webDriver)
                     .executeScript("return document.readyState").equals("complete"));
                 
                 String actualTitle = driver.getTitle();
-                System.out.println("测试页面: " + pageUrls[i] + ", 标题: " + actualTitle);
+                System.out.println("Testing page: " + pageUrls[i] + ", title: " + actualTitle);
                 
-                // 检查标题是否包含任一关键词
+                // Check if title contains any of the keywords
                 boolean titleMatched = false;
                 for (String keyword : expectedTitleKeywords[i]) {
                     if (actualTitle.contains(keyword)) {
@@ -214,10 +201,10 @@ public class Guru99Tests {
                     }
                 }
                 
-                assertTrue("页面标题 '" + actualTitle + "' 应包含至少一个预期关键词", titleMatched);
+                assertTrue("Page title '" + actualTitle + "' should contain at least one expected keyword", titleMatched);
             } catch (Exception e) {
-                System.err.println("访问页面 " + pageUrls[i] + " 时发生错误: " + e.getMessage());
-                // 继续测试下一个页面，而不是立即失败
+                System.err.println("Error when accessing page " + pageUrls[i] + ": " + e.getMessage());
+                // Continue testing next page instead of failing immediately
                 continue;
             }
         }
@@ -225,174 +212,174 @@ public class Guru99Tests {
     
     
     /**
-     * 测试复杂XPath定位
+     * Test complex XPath locators
      */
     @Test
     public void testComplexXPath() {
         driver.get("https://demo.guru99.com/test/login.html");
         
-        // 使用复杂XPath定位登录按钮
+        // Use complex XPath to locate login button
         WebElement loginButton = driver.findElement(
             By.xpath("//form[@id='login_form']//button[@id='SubmitLogin']")
         );
         
-        assertNotNull("应该找到登录按钮", loginButton);
-        assertEquals("按钮文本应该正确", "Sign in", 
+        assertNotNull("Should find login button", loginButton);
+        assertEquals("Button text should be correct", "Sign in", 
                     loginButton.findElement(By.tagName("span")).getText().trim());
     }
     
     /**
-     * 测试Cookie操作
+     * Test Cookie operations
      */
     @Test
     public void testCookieManipulation() {
-        System.out.println("开始测试: Cookie操作");
+        System.out.println("Starting test: Cookie operations");
         
-        // 打开测试页面
+        // Open test page
         driver.get("https://demo.guru99.com/test/cookie/selenium_aut.php");
         
-        // 打印所有Cookie
+        // Print all cookies
         cookieManager.printAllCookies();
         
-        // 添加自定义Cookie
+        // Add custom cookie
         cookieManager.addCookie("testCookie", "testValue");
         
-        // 验证Cookie已添加
+        // Verify cookie was added
         String cookieValue = cookieManager.getCookieValue("testCookie");
-        assertEquals("Cookie值应匹配", "testValue", cookieValue);
+        assertEquals("Cookie value should match", "testValue", cookieValue);
         
-        // 添加禁用同意弹窗的Cookie
+        // Add consent popup disabling cookie
         cookieManager.addConsentCookie();
         
-        // 刷新页面，验证弹窗不再出现
+        // Refresh page, verify popup doesn't appear
         driver.navigate().refresh();
         
-        // 删除所有Cookie
+        // Delete all cookies
         cookieManager.deleteAllCookies();
         
-        System.out.println("测试完成: Cookie操作");
+        System.out.println("Test completed: Cookie operations");
     }
 
     /**
-     * 测试拖放操作
+     * Test drag and drop operations
      */
     @Test
     public void testDragAndDrop() {
-        System.out.println("开始测试: 拖放操作");
+        System.out.println("Starting test: Drag and drop operations");
         
-        // 打开拖放演示页面
+        // Open drag and drop demo page
         dragAndDropPage.openPage();
         
-        // 执行所有拖放操作
+        // Perform all drag and drop operations
         dragAndDropPage.completeAllDragAndDrop();
         
-        // 验证"Perfect!"按钮是否显示
+        // Verify if "Perfect!" button is displayed
         boolean isPerfect = dragAndDropPage.isPerfectButtonDisplayed();
         
-        // 断言拖放操作成功
-        assertTrue("拖放操作后应显示Perfect按钮", isPerfect);
+        // Assert drag and drop operations successful
+        assertTrue("Perfect button should be displayed after drag and drop operations", isPerfect);
         
-        System.out.println("测试完成: 拖放操作");
+        System.out.println("Test completed: Drag and drop operations");
     }
 
     /**
-     * 测试鼠标悬停功能
+     * Test mouse hover functionality
      */
     @Test
     public void test5_HoverTest() {
-        System.out.println("测试: 鼠标悬停");
+        System.out.println("Test: Mouse hover");
         
-        // 打开悬停测试页面
+        // Open hover test page
         hoverPage.openPage();
         
-        // 检查页面是否包含下载按钮
+        // Check if page contains download button
         boolean hasDownloadButton = hoverPage.hasDownloadButton();
         if (!hasDownloadButton) {
-            System.out.println("警告: 页面上没有找到下载按钮，测试可能会失败");
+            System.out.println("Warning: Download button not found on page, test may fail");
         }
         
         try {
-            // 执行悬停操作
+            // Perform hover operation
             hoverPage.hoverOverDownloadButton();
             
-            // 检查工具提示
+            // Check tooltip
             boolean isTooltipVisible = hoverPage.isTooltipVisible();
             
             if (isTooltipVisible) {
-                // 验证工具提示
+                // Verify tooltip
                 String tooltipText = hoverPage.getTooltipText();
-                assertFalse("工具提示文本不应为空", tooltipText.isEmpty());
-                System.out.println("工具提示显示正常，文本: " + tooltipText);
+                assertFalse("Tooltip text should not be empty", tooltipText.isEmpty());
+                System.out.println("Tooltip displays correctly, text: " + tooltipText);
             } else {
-                // 如果工具提示不可见，考虑跳过此测试而不是失败
-                System.out.println("工具提示不可见，可能网站结构已改变");
-                // 使用假设跳过测试而不是失败
-                Assume.assumeTrue("跳过测试: 工具提示不可见", false);
+                // If tooltip not visible, consider skipping this test instead of failing
+                System.out.println("Tooltip not visible, website structure may have changed");
+                // Use assumption to skip test instead of failing
+                Assume.assumeTrue("Skipping test: Tooltip not visible", false);
             }
         } catch (Exception e) {
-            System.err.println("悬停测试过程中发生错误: " + e.getMessage());
-            // 使用假设跳过测试而不是失败
-            Assume.assumeTrue("跳过测试: " + e.getMessage(), false);
+            System.err.println("Error occurred during hover test: " + e.getMessage());
+            // Use assumption to skip test instead of failing
+            Assume.assumeTrue("Skipping test: " + e.getMessage(), false);
         }
         
-        System.out.println("测试完成: 鼠标悬停");
+        System.out.println("Test completed: Mouse hover");
     }
 
     /**
-     * 测试浏览器历史
+     * Test browser history
      */
     @Test
     public void testBrowserHistory() {
-        System.out.println("开始测试: 浏览器历史");
+        System.out.println("Starting test: Browser history");
         
-        // 访问第一个页面
+        // Visit first page
         historyTestPage.visitFirstPage();
-        assertTrue("应该在第一个页面", historyTestPage.isOnFirstPage());
+        assertTrue("Should be on first page", historyTestPage.isOnFirstPage());
         
-        // 访问第二个页面
+        // Visit second page
         historyTestPage.visitSecondPage();
-        assertTrue("应该在第二个页面", historyTestPage.isOnSecondPage());
+        assertTrue("Should be on second page", historyTestPage.isOnSecondPage());
         
-        // 测试后退按钮
+        // Test back button
         historyTestPage.goBack();
-        assertTrue("后退后应该在第一个页面", historyTestPage.isOnFirstPage());
+        assertTrue("After going back should be on first page", historyTestPage.isOnFirstPage());
         
-        // 测试前进按钮
+        // Test forward button
         historyTestPage.goForward();
-        assertTrue("前进后应该在第二个页面", historyTestPage.isOnSecondPage());
+        assertTrue("After going forward should be on second page", historyTestPage.isOnSecondPage());
         
-        // 测试刷新按钮
+        // Test refresh button
         historyTestPage.refresh();
-        assertTrue("刷新后应该仍在第二个页面", historyTestPage.isOnSecondPage());
+        assertTrue("After refresh should still be on second page", historyTestPage.isOnSecondPage());
         
-        System.out.println("测试完成: 浏览器历史");
+        System.out.println("Test completed: Browser history");
     }
 
     /**
-     * 测试Textarea功能
+     * Test Textarea functionality
      */
     @Test
     public void testTextareaFunctionality() {
-        System.out.println("开始测试: Textarea功能");
+        System.out.println("Starting test: Textarea functionality");
         
-        // 创建Textarea页面对象
+        // Create Textarea page object
         TextareaPage textareaPage = new TextareaPage(driver);
         textareaPage.openPage();
         
         try {
-            // 测试输入文本
-            String testText = "这是一个测试文本，用于测试Guru99网站上的textarea功能。"
-                + "我们正在验证文本输入、字符显示以及表单交互等功能。";
+            // Test text input
+            String testText = "This is a test text for testing the textarea functionality on the Guru99 website. "
+                + "We are verifying text input, character display, and form interaction features.";
             textareaPage.enterText(testText);
             
-            // 验证文本是否成功输入
+            // Verify text was successfully input
             String actualText = textareaPage.getTextContent();
-            assertTrue("Textarea应该包含输入的文本", actualText.equals(testText));
+            assertTrue("Textarea should contain the input text", actualText.equals(testText));
             
-            System.out.println("Textarea功能测试完成");
+            System.out.println("Textarea functionality test completed");
         } catch (Exception e) {
-            System.err.println("Textarea测试失败: " + e.getMessage());
-            fail("Textarea测试失败: " + e.getMessage());
+            System.err.println("Textarea test failed: " + e.getMessage());
+            fail("Textarea test failed: " + e.getMessage());
         }
     }
 

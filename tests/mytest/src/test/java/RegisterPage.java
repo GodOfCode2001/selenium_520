@@ -4,218 +4,218 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 /**
- * 保险经纪系统注册页面对象
+ * Insurance Broker System Registration Page Object
  */
 public class RegisterPage extends BasePage {
-    // 页面URL
+    // Page URL
     private static final String PAGE_URL = "https://demo.guru99.com/insurance/v1/register.php";
     
-    // 表单元素定位符
+    // Form element locators
     private By titleSelectLocator = By.id("user_title");
     private By firstnameInputLocator = By.id("user_firstname");
     private By surnameInputLocator = By.id("user_surname");
     private By phoneInputLocator = By.id("user_phone");
     
-    // 出生日期下拉框
+    // Date of birth dropdowns
     private By yearSelectLocator = By.name("year");
     private By monthSelectLocator = By.name("month");
     private By daySelectLocator = By.name("date");
     
-    // 驾照信息
+    // License information
     private By fullLicenseRadioLocator = By.id("user_licencetype_t");
     private By licencePeriodSelectLocator = By.id("user_licenceperiod");
     private By occupationSelectLocator = By.id("user_occupation_id");
     
-    // 地址信息
+    // Address information
     private By streetInputLocator = By.id("user_address_attributes_street");
     private By cityInputLocator = By.id("user_address_attributes_city");
     private By countyInputLocator = By.id("user_address_attributes_county");
     private By postcodeInputLocator = By.id("user_address_attributes_postcode");
     
-    // 账户信息
+    // Account information
     private By emailInputLocator = By.id("user_user_detail_attributes_email");
     private By passwordInputLocator = By.id("user_user_detail_attributes_password");
     private By confirmPasswordInputLocator = By.id("user_user_detail_attributes_password_confirmation");
     
-    // 按钮
+    // Buttons
     private By createButtonLocator = By.name("submit");
     private By resetButtonLocator = By.xpath("//input[@type='reset']");
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public RegisterPage(WebDriver driver) {
         super(driver);
     }
     
     /**
-     * 打开注册页面
+     * Open registration page
      */
     public RegisterPage openPage() {
         driver.get(PAGE_URL);
-        System.out.println("已打开注册页面: " + PAGE_URL);
+        System.out.println("Opened registration page: " + PAGE_URL);
         return this;
     }
     
     /**
-     * 选择称谓
+     * Select title
      */
     public RegisterPage selectTitle(String title) {
         try {
             new Select(waitForElementVisible(titleSelectLocator)).selectByVisibleText(title);
-            System.out.println("已选择称谓: " + title);
+            System.out.println("Selected title: " + title);
         } catch (Exception e) {
-            System.err.println("选择称谓失败: " + e.getMessage());
+            System.err.println("Failed to select title: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 输入名字
+     * Enter first name
      */
     public RegisterPage enterFirstname(String firstname) {
         enterText(firstnameInputLocator, firstname);
-        System.out.println("已输入名字: " + firstname);
+        System.out.println("Entered first name: " + firstname);
         return this;
     }
     
     /**
-     * 输入姓氏
+     * Enter surname
      */
     public RegisterPage enterSurname(String surname) {
         enterText(surnameInputLocator, surname);
-        System.out.println("已输入姓氏: " + surname);
+        System.out.println("Entered surname: " + surname);
         return this;
     }
     
     /**
-     * 输入电话
+     * Enter phone number
      */
     public RegisterPage enterPhone(String phone) {
         enterText(phoneInputLocator, phone);
-        System.out.println("已输入电话: " + phone);
+        System.out.println("Entered phone: " + phone);
         return this;
     }
     
     /**
-     * 设置出生日期
+     * Set date of birth
      */
     public RegisterPage setDateOfBirth(String year, String month, String day) {
         try {
             new Select(waitForElementVisible(yearSelectLocator)).selectByValue(year);
             new Select(waitForElementVisible(monthSelectLocator)).selectByValue(month);
             new Select(waitForElementVisible(daySelectLocator)).selectByValue(day);
-            System.out.println("已设置出生日期: " + year + "-" + month + "-" + day);
+            System.out.println("Set date of birth: " + year + "-" + month + "-" + day);
         } catch (Exception e) {
-            System.err.println("设置出生日期失败: " + e.getMessage());
+            System.err.println("Failed to set date of birth: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 选择驾照类型(全程)
+     * Select full license type
      */
     public RegisterPage selectFullLicense() {
         try {
-            // 尝试多种可能的定位符
+            // Try multiple possible locators
             By[] possibleLocators = {
-                fullLicenseRadioLocator,                                   // 原始定位符
-                By.id("licencetype_t"),                                   // 可能的替代定位符(无user_前缀)
-                By.xpath("//input[@type='radio' and @value='t']"),       // 使用值定位
-                By.xpath("//input[@type='radio' and contains(@id, 'licencetype')]") // 更宽松的匹配
+                fullLicenseRadioLocator,                                   // Original locator
+                By.id("licencetype_t"),                                   // Possible alternative locator (without user_ prefix)
+                By.xpath("//input[@type='radio' and @value='t']"),       // Locate by value
+                By.xpath("//input[@type='radio' and contains(@id, 'licencetype')]") // More loose matching
             };
             
             boolean found = false;
             for (By locator : possibleLocators) {
                 try {
                     WebElement element = driver.findElement(locator);
-                    // 使用JavaScript点击，避免元素可能被其他元素遮挡
+                    // Use JavaScript click to avoid element being obscured by other elements
                     JavascriptExecutor js = (JavascriptExecutor) driver;
                     js.executeScript("arguments[0].click();", element);
-                    System.out.println("已成功选择驾照类型，使用定位符: " + locator);
+                    System.out.println("Successfully selected license type, using locator: " + locator);
                     found = true;
                     break;
                 } catch (NoSuchElementException e) {
-                    // 继续尝试下一个定位符
+                    // Continue to try next locator
                     continue;
                 }
             }
             
             if (!found) {
-                // 如果所有尝试都失败，可能页面结构已改变，但我们继续测试
-                System.out.println("警告: 未找到驾照类型选择元素，继续测试流程");
+                // If all attempts fail, page structure may have changed, but we continue testing
+                System.out.println("Warning: License type selection element not found, continuing test flow");
             }
         } catch (Exception e) {
-            System.err.println("选择驾照类型失败: " + e.getMessage());
+            System.err.println("Failed to select license type: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 选择驾照期限
+     * Select license period
      */
     public RegisterPage selectLicencePeriod(String years) {
         try {
             new Select(waitForElementVisible(licencePeriodSelectLocator)).selectByValue(years);
-            System.out.println("已选择驾照期限: " + years + "年");
+            System.out.println("Selected license period: " + years + " years");
         } catch (Exception e) {
-            System.err.println("选择驾照期限失败: " + e.getMessage());
+            System.err.println("Failed to select license period: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 选择职业
+     * Select occupation
      */
     public RegisterPage selectOccupation(String occupation) {
         try {
             new Select(waitForElementVisible(occupationSelectLocator)).selectByVisibleText(occupation);
-            System.out.println("已选择职业: " + occupation);
+            System.out.println("Selected occupation: " + occupation);
         } catch (Exception e) {
-            System.err.println("选择职业失败: " + e.getMessage());
+            System.err.println("Failed to select occupation: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 输入地址信息
+     * Enter address information
      */
     public RegisterPage setAddress(String street, String city, String county, String postcode) {
         enterText(streetInputLocator, street);
         enterText(cityInputLocator, city);
         enterText(countyInputLocator, county);
         enterText(postcodeInputLocator, postcode);
-        System.out.println("已输入地址信息");
+        System.out.println("Entered address information");
         return this;
     }
     
     /**
-     * 输入账户信息
+     * Enter account information
      */
     public RegisterPage setAccountInfo(String email, String password) {
         enterText(emailInputLocator, email);
         enterText(passwordInputLocator, password);
         enterText(confirmPasswordInputLocator, password);
-        System.out.println("已输入账户信息: " + email);
+        System.out.println("Entered account information: " + email);
         return this;
     }
     
     /**
-     * 点击创建按钮
+     * Click create button
      */
     public void clickCreate() {
         try {
             clickElement(createButtonLocator);
-            System.out.println("已点击创建按钮");
+            System.out.println("Clicked create button");
         } catch (Exception e) {
-            System.err.println("点击创建按钮失败，尝试使用JavaScript点击: " + e.getMessage());
+            System.err.println("Failed to click create button, trying JavaScript click: " + e.getMessage());
             jsClick(createButtonLocator);
         }
     }
     
     /**
-     * 完整的注册流程
+     * Complete registration process
      */
     public void registerUser(String email, String password) {
         selectTitle("Mr");
@@ -230,12 +230,12 @@ public class RegisterPage extends BasePage {
         setAccountInfo(email, password);
         clickCreate();
         
-        // 等待注册完成，重定向到登录页面
+        // Wait for registration to complete, redirect to login page
         try {
             waitForUrlContains("index.php");
-            System.out.println("注册成功，已重定向到登录页面");
+            System.out.println("Registration successful, redirected to login page");
         } catch (Exception e) {
-            System.err.println("等待重定向超时: " + e.getMessage());
+            System.err.println("Timeout waiting for redirect: " + e.getMessage());
         }
     }
 }

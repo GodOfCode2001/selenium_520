@@ -6,106 +6,106 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 /**
- * Textarea测试页面对象
+ * Textarea test page object
  */
 public class TextareaPage extends BasePage {
     private String pageUrl = "https://demo.guru99.com/test/autoit.html";
     
-    // 更新为正确的元素定位符
-    private By textareaLocator = By.id("input_6"); // 修改为网页上实际的ID
-    private By submitButtonLocator = By.id("input_2"); // 提交按钮ID
+    // Updated to correct element locator
+    private By textareaLocator = By.id("input_6"); // Modified to the actual ID on the webpage
+    private By submitButtonLocator = By.id("input_2"); // Submit button ID
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public TextareaPage(WebDriver driver) {
         super(driver);
     }
     
     /**
-     * 打开Textarea测试页面
-     * @return 当前页面实例，支持链式调用
+     * Open Textarea test page
+     * @return Current page instance, supports chained calls
      */
     public TextareaPage openPage() {
         driver.get(pageUrl);
-        System.out.println("已打开Textarea测试页面: " + pageUrl);
+        System.out.println("Opened Textarea test page: " + pageUrl);
         return this;
     }
     
     /**
-     * 在textarea中输入文本
-     * @param text 要输入的文本
-     * @return 当前页面实例，支持链式调用
+     * Enter text in textarea
+     * @param text Text to input
+     * @return Current page instance, supports chained calls
      */
     public TextareaPage enterText(String text) {
         try {
-            // 点击"Create A Course"按钮显示包含textarea的表单
+            // Click "Create A Course" button to display form containing textarea
             WebElement createCourseBtn = driver.findElement(By.id("getjob"));
             createCourseBtn.click();
-            System.out.println("已点击'Create A Course'按钮");
+            System.out.println("Clicked 'Create A Course' button");
             
-            // 等待textarea显示
+            // Wait for textarea to display
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement textarea = wait.until(ExpectedConditions.visibilityOfElementLocated(textareaLocator));
             
             textarea.clear();
             textarea.sendKeys(text);
-            System.out.println("已在textarea中输入文本: " + (text.length() > 30 ? text.substring(0, 27) + "..." : text));
+            System.out.println("Entered text in textarea: " + (text.length() > 30 ? text.substring(0, 27) + "..." : text));
             return this;
         } catch (Exception e) {
-            System.err.println("在textarea中输入文本失败: " + e.getMessage());
+            System.err.println("Failed to enter text in textarea: " + e.getMessage());
             throw e;
         }
     }
     
     /**
-     * 获取textarea的内容
-     * @return textarea中的文本
+     * Get textarea content
+     * @return Text in textarea
      */
     public String getTextContent() {
         try {
             WebElement textarea = driver.findElement(textareaLocator);
             return textarea.getAttribute("value");
         } catch (Exception e) {
-            System.err.println("获取textarea内容失败: " + e.getMessage());
+            System.err.println("Failed to get textarea content: " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * 提交表单
-     * @return 当前页面实例，支持链式调用
+     * Submit form
+     * @return Current page instance, supports chained calls
      */
     public TextareaPage submitForm() {
         try {
             WebElement submitButton = driver.findElement(submitButtonLocator);
             submitButton.click();
-            System.out.println("已点击提交按钮");
+            System.out.println("Clicked submit button");
             return this;
         } catch (Exception e) {
-            System.err.println("提交表单失败: " + e.getMessage());
+            System.err.println("Failed to submit form: " + e.getMessage());
             throw e;
         }
     }
     
     /**
-     * 测试textarea验证功能
-     * @return 是否显示验证消息
+     * Test textarea validation function
+     * @return Whether validation message is displayed
      */
     public boolean isValidationDisplayed() {
         try {
-            // 清空textarea
+            // Clear textarea
             WebElement textarea = driver.findElement(textareaLocator);
             textarea.clear();
             
-            // 点击其他地方触发验证
+            // Click elsewhere to trigger validation
             driver.findElement(By.tagName("body")).click();
             
-            // 检查验证样式是否应用
+            // Check if validation style is applied
             return textarea.getAttribute("class").contains("validate-error");
         } catch (Exception e) {
-            System.err.println("测试验证功能失败: " + e.getMessage());
+            System.err.println("Failed to test validation function: " + e.getMessage());
             return false;
         }
     }

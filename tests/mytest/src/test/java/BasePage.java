@@ -4,21 +4,21 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import org.openqa.selenium.interactions.Actions; // 添加这一行导入Actions类
-import java.util.List; // 添加这一行导入List类
-import org.openqa.selenium.Cookie; // 添加这一行导入Cookie类
+import org.openqa.selenium.interactions.Actions;
+import java.util.List;
+import org.openqa.selenium.Cookie;
 import utils.*;
 
 /**
- * 所有页面对象的基类
+ * The base class for all page objects
  */
 public class BasePage {
     protected WebDriver driver;
     protected WebDriverWait wait;
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver
      */
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -26,27 +26,27 @@ public class BasePage {
     }
     
     /**
-     * 等待元素可见
-     * @param locator 元素定位器
-     * @return 找到的WebElement
+     * Waiting for an element to be visible
+     * @param locator Element locator
+     * @return The found WebElement
      */
     protected WebElement waitForElementVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
     
     /**
-     * 等待元素可点击
-     * @param locator 元素定位器
-     * @return 找到的WebElement
+     * Wait for element to be clickable
+     * @param locator Element locator
+     * @return The found WebElement
      */
     protected WebElement waitForElementClickable(By locator) {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
     
     /**
-     * 清除并输入文本
-     * @param locator 元素定位器
-     * @param text 要输入的文本
+     * Clear and enter text
+     * @param locator Element locator
+     * @param text Text to input
      */
     protected void enterText(By locator, String text) {
         WebElement element = waitForElementVisible(locator);
@@ -55,49 +55,49 @@ public class BasePage {
     }
     
     /**
-     * 点击元素
-     * @param locator 元素定位器
+     * Click element
+     * @param locator Element locator
      */
     protected void clickElement(By locator) {
         waitForElementClickable(locator).click();
     }
     
     /**
-     * 获取元素文本
-     * @param locator 元素定位器
-     * @return 元素文本
+     * Get element text
+     * @param locator Element locator
+     * @return Element text
      */
     protected String getElementText(By locator) {
         return waitForElementVisible(locator).getText();
     }
     
     /**
-     * 获取页面标题
-     * @return 页面标题
+     * Get page title
+     * @return Page title
      */
     public String getPageTitle() {
         return driver.getTitle();
     }
     
     /**
-     * 获取当前URL
-     * @return 当前URL
+     * Get current URL
+     * @return Current URL
      */
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
     
     /**
-     * 等待URL包含指定文本
-     * @param urlFragment URL片段
+     * Wait for URL to contain specified text
+     * @param urlFragment URL fragment
      */
     protected void waitForUrlContains(String urlFragment) {
         wait.until(ExpectedConditions.urlContains(urlFragment));
     }
     
     /**
-     * 使用JavaScript点击元素
-     * @param locator 元素定位器
+     * Click element using JavaScript
+     * @param locator Element locator
      */
     protected void jsClick(By locator) {
         WebElement element = driver.findElement(locator);
@@ -105,9 +105,9 @@ public class BasePage {
         js.executeScript("arguments[0].click();", element);
     }
     /**
-     * 执行拖放操作
-     * @param sourceLocator 源元素定位符
-     * @param targetLocator 目标元素定位符
+     * Perform drag and drop operation
+     * @param sourceLocator Source element locator
+     * @param targetLocator Target element locator
      */
     protected void dragAndDrop(By sourceLocator, By targetLocator) {
         WebElement source = waitForElementVisible(sourceLocator);
@@ -118,8 +118,8 @@ public class BasePage {
     }
 
     /**
-     * 在元素上执行鼠标悬停操作
-     * @param locator 要悬停的元素定位符
+     * Perform mouse hover operation on element
+     * @param locator Element locator to hover over
      */
     protected void hoverOverElement(By locator) {
         WebElement element = waitForElementVisible(locator);
@@ -128,30 +128,30 @@ public class BasePage {
     }
 
     /**
-     * 浏览器后退
+     * Browser back
      */
     protected void browserBack() {
         driver.navigate().back();
     }
 
     /**
-     * 浏览器前进
+     * Browser forward
      */
     protected void browserForward() {
         driver.navigate().forward();
     }
 
     /**
-     * 刷新页面
+     * Refresh page
      */
     protected void refreshPage() {
         driver.navigate().refresh();
     }
 
     /**
-     * 添加Cookie
-     * @param name Cookie名称
-     * @param value Cookie值
+     * Add Cookie
+     * @param name Cookie name
+     * @param value Cookie value
      */
     protected void addCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
@@ -159,9 +159,9 @@ public class BasePage {
     }
 
     /**
-     * 获取Cookie值
-     * @param name Cookie名称
-     * @return Cookie的值，如果不存在则返回null
+     * Get Cookie value
+     * @param name Cookie name
+     * @return Cookie value, returns null if it doesn't exist
      */
     protected String getCookieValue(String name) {
         Cookie cookie = driver.manage().getCookieNamed(name);
@@ -169,8 +169,8 @@ public class BasePage {
     }
 
     /**
-     * 删除指定的Cookie
-     * @param name 要删除的Cookie名称
+     * Delete specified Cookie
+     * @param name Name of the Cookie to delete
      */
     protected void deleteCookie(String name) {
         driver.manage().deleteCookieNamed(name);

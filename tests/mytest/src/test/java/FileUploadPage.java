@@ -5,10 +5,10 @@ import org.openqa.selenium.support.ui.*;
 import java.io.File;
 
 /**
- * 文件上传页面对象类
+ * File Upload Page Object Class
  */
 public class FileUploadPage extends BasePage {
-    // 元素定位器
+    // Element locators
     private By fileInputLocator = By.id("uploadfile_0");
     private By termsCheckboxLocator = By.id("terms");
     private By submitButtonLocator = By.id("submitbutton");
@@ -19,115 +19,104 @@ public class FileUploadPage extends BasePage {
     }
     
     /**
-     * 打开文件上传页面
+     * Open file upload page
      */
     public FileUploadPage openPage() {
         driver.get("https://demo.guru99.com/test/upload/");
-        System.out.println("已打开文件上传测试页面");
+        System.out.println("Opened file upload test page");
         return this;
     }
     
     /**
-     * 选择要上传的文件
-     * @param filePath 文件的完整路径
+     * Select file to upload
+     * @param filePath Complete path to the file
      */
     public FileUploadPage selectFile(String filePath) {
         try {
             File file = new File(filePath);
             if (!file.exists()) {
-                System.out.println("警告：文件不存在 - " + filePath);
+                System.out.println("Warning: File does not exist - " + filePath);
             }
             
-            // 修正：使用waitForElementVisible方法
+            // Fix: Use waitForElementVisible method
             WebElement fileInput = waitForElementVisible(fileInputLocator);
             fileInput.sendKeys(file.getAbsolutePath());
-            System.out.println("已选择文件: " + file.getName());
+            System.out.println("Selected file: " + file.getName());
         } catch (Exception e) {
-            System.out.println("选择文件失败: " + e.getMessage());
+            System.out.println("Failed to select file: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 勾选接受服务条款复选框
+     * Check the accept terms checkbox
      */
     public FileUploadPage acceptTerms() {
         try {
             WebElement checkbox = waitForElementClickable(termsCheckboxLocator);
             if (!checkbox.isSelected()) {
                 checkbox.click();
-                System.out.println("已勾选接受服务条款");
+                System.out.println("Checked accept terms checkbox");
             }
         } catch (Exception e) {
-            System.out.println("勾选服务条款失败: " + e.getMessage());
+            System.out.println("Failed to check terms checkbox: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 点击提交文件按钮
+     * Click submit file button
      */
     public FileUploadPage clickSubmit() {
         try {
             WebElement submitButton = waitForElementClickable(submitButtonLocator);
             submitButton.click();
-            System.out.println("已点击提交按钮");
+            System.out.println("Clicked submit button");
             
-            // 等待上传完成，结果消息显示出来
+            // Wait for upload to complete, result message to appear
             waitForElementVisible(resultMessageLocator);
         } catch (Exception e) {
-            System.out.println("点击提交按钮或等待结果失败: " + e.getMessage());
+            System.out.println("Failed to click submit button or wait for result: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 检查上传是否成功
-     * @return 上传是否成功
+     * Check if upload was successful
+     * @return Whether upload was successful
      */
-    // public boolean isUploadSuccessful() {
-    //     try {
-    //         WebElement resultMessage = waitForElementVisible(resultMessageLocator);
-    //         boolean isDisplayed = resultMessage.isDisplayed();
-    //         String message = resultMessage.getText();
-    //         System.out.println("上传结果消息: " + message);
-    //         return isDisplayed && message.contains("成功上传") || message.contains("successfully uploaded");
-    //     } catch (Exception e) {
-    //         System.out.println("检查上传结果失败: " + e.getMessage());
-    //         return false;
-    //     }
-    // }
+    
     public boolean isUploadSuccessful() {
         try {
             WebElement resultMessage = waitForElementVisible(resultMessageLocator);
             boolean isDisplayed = resultMessage.isDisplayed();
             String message = resultMessage.getText();
-            System.out.println("上传结果消息: " + message);
-            // 网站总是显示成功消息，所以我们只检查消息是否显示
+            System.out.println("Upload result message: " + message);
+            // The website always shows success message, so we just check if the message is displayed
             return isDisplayed && message.length() > 0;
         } catch (Exception e) {
-            System.out.println("检查上传结果失败: " + e.getMessage());
+            System.out.println("Failed to check upload result: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * 获取上传结果消息文本
-     * @return 结果消息文本
+     * Get upload result message text
+     * @return Result message text
      */
     public String getResultMessage() {
         try {
             WebElement resultMessage = waitForElementVisible(resultMessageLocator);
             return resultMessage.getText();
         } catch (Exception e) {
-            System.out.println("获取结果消息失败: " + e.getMessage());
+            System.out.println("Failed to get result message: " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * 完整的文件上传流程
-     * @param filePath 文件路径
+     * Complete file upload workflow
+     * @param filePath File path
      */
     public FileUploadPage uploadFile(String filePath) {
         this.selectFile(filePath)

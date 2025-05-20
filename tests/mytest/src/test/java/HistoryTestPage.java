@@ -3,49 +3,49 @@ package pages;
 import org.openqa.selenium.*;
 
 /**
- * 浏览器历史测试页面对象
+ * Browser history test page object
  */
 public class HistoryTestPage extends BasePage {
     private String firstPageUrl = "https://demo.guru99.com/test/";
     private String secondPageUrl = "https://demo.guru99.com/test/drag_drop.html";
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public HistoryTestPage(WebDriver driver) {
         super(driver);
     }
     
     /**
-     * 访问第一个页面
-     * @return 当前对象实例，支持链式调用
+     * Visit the first page
+     * @return Current object instance, supports chained calls
      */
     public HistoryTestPage visitFirstPage() {
         driver.get(firstPageUrl);
-        System.out.println("已访问第一个页面: " + firstPageUrl);
+        System.out.println("Visited first page: " + firstPageUrl);
         return this;
     }
     
     /**
-     * 访问第二个页面
-     * @return 当前对象实例，支持链式调用
+     * Visit the second page
+     * @return Current object instance, supports chained calls
      */
     public HistoryTestPage visitSecondPage() {
         driver.get(secondPageUrl);
-        System.out.println("已访问第二个页面: " + secondPageUrl);
+        System.out.println("Visited second page: " + secondPageUrl);
         return this;
     }
     
     /**
-     * 点击浏览器的后退按钮
-     * @return 当前对象实例，支持链式调用
+     * Click browser's back button
+     * @return Current object instance, supports chained calls
      */
     public HistoryTestPage goBack() {
         driver.navigate().back();
-        System.out.println("已点击浏览器的后退按钮");
+        System.out.println("Clicked browser's back button");
         
-        // 等待页面加载
+        // Wait for page to load
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -56,14 +56,14 @@ public class HistoryTestPage extends BasePage {
     }
     
     /**
-     * 点击浏览器的前进按钮
-     * @return 当前对象实例，支持链式调用
+     * Click browser's forward button
+     * @return Current object instance, supports chained calls
      */
     public HistoryTestPage goForward() {
         driver.navigate().forward();
-        System.out.println("已点击浏览器的前进按钮");
+        System.out.println("Clicked browser's forward button");
         
-        // 等待页面加载
+        // Wait for page to load
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -74,14 +74,14 @@ public class HistoryTestPage extends BasePage {
     }
     
     /**
-     * 刷新当前页面
-     * @return 当前对象实例，支持链式调用
+     * Refresh current page
+     * @return Current object instance, supports chained calls
      */
     public HistoryTestPage refresh() {
         driver.navigate().refresh();
-        System.out.println("已刷新当前页面");
+        System.out.println("Refreshed current page");
         
-        // 等待页面加载
+        // Wait for page to load
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -92,26 +92,26 @@ public class HistoryTestPage extends BasePage {
     }
     
     /**
-     * 获取当前页面URL
-     * @return 当前页面URL
+     * Get current page URL
+     * @return Current page URL
      */
     public String getCurrentUrl() {
         String url = driver.getCurrentUrl();
-        System.out.println("当前页面URL: " + url);
+        System.out.println("Current page URL: " + url);
         return url;
     }
     
     /**
-     * 检查当前页面是否是第一个页面
-     * @return 是否是第一个页面
+     * Check if current page is the first page
+     * @return Whether it is the first page
      */
     public boolean isOnFirstPage() {
         return driver.getCurrentUrl().startsWith(firstPageUrl);
     }
     
     /**
-     * 检查当前页面是否是第二个页面
-     * @return 是否是第二个页面
+     * Check if current page is the second page
+     * @return Whether it is the second page
      */
     public boolean isOnSecondPage() {
         return driver.getCurrentUrl().startsWith(secondPageUrl);

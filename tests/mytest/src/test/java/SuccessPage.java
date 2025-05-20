@@ -3,10 +3,10 @@ package pages;
 import org.openqa.selenium.*;
 
 /**
- * 登录成功页面对象
+ * Login Success Page Object
  */
 public class SuccessPage extends BasePage {
-    // 定位器
+    // Locators
     private By successMessageLocator = By.tagName("h3");
     
     public SuccessPage(WebDriver driver) {
@@ -15,14 +15,14 @@ public class SuccessPage extends BasePage {
     }
     
     /**
-     * 获取成功消息
+     * Get success message
      */
     public String getSuccessMessage() {
         return getElementText(successMessageLocator);
     }
     
     /**
-     * 验证URL包含成功标识
+     * Verify URL contains success identifier
      */
     public boolean isOnSuccessPage() {
         return driver.getCurrentUrl().contains("success.html");

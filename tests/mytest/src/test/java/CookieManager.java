@@ -6,34 +6,34 @@ import org.openqa.selenium.WebDriver;
 import java.util.Set;
 
 /**
- * Cookie管理工具类
+ * Cookie Management Utility Class
  */
 public class CookieManager {
     private WebDriver driver;
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public CookieManager(WebDriver driver) {
         this.driver = driver;
     }
     
     /**
-     * 添加Cookie
-     * @param name Cookie名称
-     * @param value Cookie值
+     * Add Cookie
+     * @param name Cookie name
+     * @param value Cookie value
      */
     public void addCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
         driver.manage().addCookie(cookie);
-        System.out.println("已添加Cookie: " + name + "=" + value);
+        System.out.println("Added Cookie: " + name + "=" + value);
     }
     
     /**
-     * 获取Cookie值
-     * @param name Cookie名称
-     * @return Cookie值，如果不存在则返回null
+     * Get Cookie value
+     * @param name Cookie name
+     * @return Cookie value, returns null if it doesn't exist
      */
     public String getCookieValue(String name) {
         Cookie cookie = driver.manage().getCookieNamed(name);
@@ -41,40 +41,40 @@ public class CookieManager {
     }
     
     /**
-     * 删除特定Cookie
-     * @param name Cookie名称
+     * Delete specific Cookie
+     * @param name Cookie name
      */
     public void deleteCookie(String name) {
         driver.manage().deleteCookieNamed(name);
-        System.out.println("已删除Cookie: " + name);
+        System.out.println("Deleted Cookie: " + name);
     }
     
     /**
-     * 删除所有Cookie
+     * Delete all Cookies
      */
     public void deleteAllCookies() {
         driver.manage().deleteAllCookies();
-        System.out.println("已删除所有Cookie");
+        System.out.println("Deleted All Cookies");
     }
     
     /**
-     * 打印所有Cookie
+     * Print all Cookies
      */
     public void printAllCookies() {
         Set<Cookie> cookies = driver.manage().getCookies();
-        System.out.println("当前有 " + cookies.size() + " 个Cookie:");
+        System.out.println("Currently have " + cookies.size() + " Cookies:");
         for (Cookie cookie : cookies) {
             System.out.println("  " + cookie.getName() + ": " + cookie.getValue());
         }
     }
     
     /**
-     * 添加禁用同意弹窗的Cookie
+     * Add Cookie to disable consent popup
      */
     public void addConsentCookie() {
-        // 这里根据实际网站调整Cookie名称和值
+        // Adjust Cookie name and value according to actual website
         addCookie("cookieconsent_status", "dismiss");
         addCookie("consent", "accepted");
-        System.out.println("已添加禁用同意弹窗的Cookie");
+        System.out.println("Added Cookie to disable consent popup");
     }
 }

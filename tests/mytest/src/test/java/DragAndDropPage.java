@@ -5,48 +5,48 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 /**
- * 拖放操作页面对象
+ * Drag and Drop Page Object
  */
 public class DragAndDropPage extends BasePage {
     private String pageUrl = "https://demo.guru99.com/test/drag_drop.html";
     
-    // 源元素定位符
+    // Source element locators
     private By bankButtonLocator = By.xpath("//li[@id='credit2']/a");
     private By salesButtonLocator = By.xpath("//li[@id='credit1']/a");
     private By amount5000Locator = By.xpath("//li[@id='fourth']/a");
     
-    // 目标元素定位符
+    // Target element locators
     private By bankAccountDropLocator = By.xpath("//ol[@id='bank']");
     private By salesAccountDropLocator = By.xpath("//ol[@id='loan']");
     private By amountDebitDropLocator = By.xpath("//ol[@id='amt7']");
     private By amountCreditDropLocator = By.xpath("//ol[@id='amt8']");
     
-    // 验证元素
+    // Verification elements
     private By perfectButtonLocator = By.xpath("//div[@id='equal']/a");
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public DragAndDropPage(WebDriver driver) {
         super(driver);
     }
     
     /**
-     * 打开拖放演示页面
-     * @return 当前对象实例，支持链式调用
+     * Open drag and drop demo page
+     * @return Current page object instance, supports method chaining
      */
     public DragAndDropPage openPage() {
         driver.get(pageUrl);
-        System.out.println("已打开拖放演示页面: " + pageUrl);
+        System.out.println("Opened drag and drop demo page: " + pageUrl);
         return this;
     }
     
     /**
-     * 执行拖放操作
-     * @param source 源元素定位符
-     * @param target 目标元素定位符
-     * @return 当前对象实例，支持链式调用
+     * Perform drag and drop operation
+     * @param source Source element locator
+     * @param target Target element locator
+     * @return Current page object instance, supports method chaining
      */
     public void dragAndDrop(By source, By target) {
         try {
@@ -56,11 +56,11 @@ public class DragAndDropPage extends BasePage {
             Actions actions = new Actions(driver);
             actions.dragAndDrop(sourceElement, targetElement).perform();
             
-            System.out.println("已执行拖放操作: 从 " + source + " 到 " + target);
+            System.out.println("Performed drag and drop operation: from " + source + " to " + target);
         } catch (Exception e) {
-            System.err.println("拖放操作失败: " + e.getMessage());
+            System.err.println("Drag and drop operation failed: " + e.getMessage());
             
-            // 尝试使用JavaScript方法执行拖放
+            // Try using JavaScript method to perform drag and drop
             try {
                 WebElement sourceElement = driver.findElement(source);
                 WebElement targetElement = driver.findElement(target);
@@ -106,33 +106,33 @@ public class DragAndDropPage extends BasePage {
                 
                 JavascriptExecutor executor = (JavascriptExecutor) driver;
                 executor.executeScript(js, sourceElement, targetElement);
-                System.out.println("已使用JavaScript执行拖放操作");
+                System.out.println("Performed drag and drop operation using JavaScript");
             } catch (Exception ex) {
-                System.err.println("JavaScript拖放也失败: " + ex.getMessage());
+                System.err.println("JavaScript drag and drop also failed: " + ex.getMessage());
             }
         }
     }
     
     /**
-     * 完成拖放操作
+     * Complete all drag and drop operations
      */
     public void completeAllDragAndDrop() {
-        // 拖放Bank到账户列
+        // Drag Bank to account column
         dragAndDrop(bankButtonLocator, bankAccountDropLocator);
         
-        // 拖放5000到借方金额列
+        // Drag 5000 to debit amount column
         dragAndDrop(amount5000Locator, amountDebitDropLocator);
         
-        // 拖放Sales到贷方账户列
+        // Drag Sales to credit account column
         dragAndDrop(salesButtonLocator, salesAccountDropLocator);
         
-        // 拖放5000到贷方金额列
+        // Drag 5000 to credit amount column
         dragAndDrop(amount5000Locator, amountCreditDropLocator);
     }
     
     /**
-     * 检查是否显示"Perfect!"按钮
-     * @return 是否显示完成按钮
+     * Check if "Perfect!" button is displayed
+     * @return Whether the completion button is displayed
      */
     public boolean isPerfectButtonDisplayed() {
         try {

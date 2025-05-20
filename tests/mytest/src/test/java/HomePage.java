@@ -4,10 +4,10 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 /**
- * 保险经纪系统主页对象(登录后)
+ * Insurance Broker System Homepage Object (post-login)
  */
 public class HomePage extends BasePage {
-    // 页面元素定位符
+    // Page element locators
     private By loggedInEmailLocator = By.cssSelector("div.content h4");
     private By logoutButtonLocator = By.xpath("//input[@value='Log out']");
     private By homeTabLocator = By.id("ui-id-1");
@@ -17,117 +17,117 @@ public class HomePage extends BasePage {
     private By editProfileTabLocator = By.id("ui-id-5");
     
     /**
-     * 构造函数
-     * @param driver WebDriver实例
+     * Constructor
+     * @param driver WebDriver instance
      */
     public HomePage(WebDriver driver) {
         super(driver);
     }
     
     /**
-     * 获取已登录用户邮箱
-     * @return 用户邮箱
+     * Get logged in user email
+     * @return User email
      */
     public String getLoggedInEmail() {
         try {
             String text = waitForElementVisible(loggedInEmailLocator).getText();
-            System.out.println("已获取登录用户邮箱: " + text);
+            System.out.println("Retrieved logged in user email: " + text);
             if (text.startsWith("Welcome")) {
                 return text.replace("Welcome ", "").trim();
             }
             return text;
         } catch (Exception e) {
-            System.err.println("获取登录用户邮箱失败: " + e.getMessage());
+            System.err.println("Failed to get logged in user email: " + e.getMessage());
             return "";
         }
     }
     
     /**
-     * 执行登出操作
+     * Perform logout operation
      */
     public void logout() {
         try {
-            // 等待登出按钮出现并点击
+            // Wait for logout button to appear and click it
             wait.until(ExpectedConditions.elementToBeClickable(logoutButtonLocator));
             WebElement logoutButton = driver.findElement(logoutButtonLocator);
             logoutButton.click();
-            System.out.println("已点击登出按钮");
+            System.out.println("Clicked logout button");
             
-            // 修改：等待任何页面变化，不强制要求特定URL
+            // Modification: Wait for any page change, not requiring specific URL
             try {
-                Thread.sleep(2000); // 给页面转换一些时间
+                Thread.sleep(2000); // Give some time for page transition
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         } catch (Exception e) {
-            System.err.println("登出失败，尝试使用JavaScript点击: " + e.getMessage());
+            System.err.println("Logout failed, trying to click using JavaScript: " + e.getMessage());
             try {
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 WebElement logoutButton = driver.findElement(logoutButtonLocator);
                 js.executeScript("arguments[0].click();", logoutButton);
                 
-                // 等待页面变化
+                // Wait for page change
                 Thread.sleep(2000);
             } catch (Exception ex) {
-                System.err.println("JavaScript点击也失败: " + ex.getMessage());
+                System.err.println("JavaScript click also failed: " + ex.getMessage());
             }
         }
     }
 
     /**
-     * 验证是否已成功登录
-     * @return 是否已登录
+     * Verify if successfully logged in
+     * @return Whether logged in
      */
     public boolean isLoggedIn() {
         try {
-            // 增加等待时间，确保页面加载完成
+            // Increase wait time to ensure page is fully loaded
             wait.until(ExpectedConditions.visibilityOfElementLocated(logoutButtonLocator));
             boolean result = driver.findElement(logoutButtonLocator).isDisplayed();
-            System.out.println("检查是否已登录: " + result);
+            System.out.println("Checking if logged in: " + result);
             return result;
         } catch (Exception e) {
-            System.out.println("未找到登出按钮，判断未登录: " + e.getMessage());
+            System.out.println("Logout button not found, determined not logged in: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * 点击主页选项卡
+     * Click Home tab
      */
     public void clickHomeTab() {
         clickElement(homeTabLocator);
-        System.out.println("已点击主页选项卡");
+        System.out.println("Clicked Home tab");
     }
     
     /**
-     * 点击请求报价选项卡
+     * Click Request Quotation tab
      */
     public void clickRequestQuotationTab() {
         clickElement(requestQuotationTabLocator);
-        System.out.println("已点击请求报价选项卡");
+        System.out.println("Clicked Request Quotation tab");
     }
     
     /**
-     * 点击检索报价选项卡
+     * Click Retrieve Quotation tab
      */
     public void clickRetrieveQuotationTab() {
         clickElement(retrieveQuotationTabLocator);
-        System.out.println("已点击检索报价选项卡");
+        System.out.println("Clicked Retrieve Quotation tab");
     }
     
     /**
-     * 点击个人资料选项卡
+     * Click Profile tab
      */
     public void clickProfileTab() {
         clickElement(profileTabLocator);
-        System.out.println("已点击个人资料选项卡");
+        System.out.println("Clicked Profile tab");
     }
     
     /**
-     * 点击编辑个人资料选项卡
+     * Click Edit Profile tab
      */
     public void clickEditProfileTab() {
         clickElement(editProfileTabLocator);
-        System.out.println("已点击编辑个人资料选项卡");
+        System.out.println("Clicked Edit Profile tab");
     }
 }

@@ -4,15 +4,15 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
 /**
- * Radio Button & Checkbox Demo页面对象类
+ * Radio Button & Checkbox Demo Page Object Class
  */
 public class FormPage extends BasePage {
-    // 单选按钮定位器
+    // Radio button locators
     private By radioOption1Locator = By.id("vfb-7-1");
     private By radioOption2Locator = By.id("vfb-7-2");
     private By radioOption3Locator = By.id("vfb-7-3");
     
-    // 复选框定位器
+    // Checkbox locators
     private By checkbox1Locator = By.id("vfb-6-0");
     private By checkbox2Locator = By.id("vfb-6-1");
     private By checkbox3Locator = By.id("vfb-6-2");
@@ -22,17 +22,17 @@ public class FormPage extends BasePage {
     }
     
     /**
-     * 打开表单页面
+     * Open form page
      */
     public FormPage openPage() {
         driver.get("https://demo.guru99.com/test/radio.html");
-        System.out.println("已打开单选按钮和复选框测试页面");
+        System.out.println("Opened radio button and checkbox test page");
         return this;
     }
     
     /**
-     * 选择单选按钮
-     * @param option 选项编号 (1, 2, 或 3)
+     * Select radio button
+     * @param option Option number (1, 2, or 3)
      */
     public FormPage selectRadioButton(int option) {
         By locator;
@@ -47,7 +47,7 @@ public class FormPage extends BasePage {
                 locator = radioOption3Locator;
                 break;
             default:
-                throw new IllegalArgumentException("无效的选项编号: " + option);
+                throw new IllegalArgumentException("Invalid option number: " + option);
         }
         
         try {
@@ -55,17 +55,17 @@ public class FormPage extends BasePage {
             if (!radioButton.isSelected()) {
                 radioButton.click();
             }
-            System.out.println("已选择选项 " + option);
+            System.out.println("Selected option " + option);
         } catch (Exception e) {
-            System.out.println("选择单选按钮失败: " + e.getMessage());
+            System.out.println("Failed to select radio button: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 勾选或取消勾选复选框
-     * @param checkboxNumber 复选框编号 (1, 2, 或 3)
-     * @param check 是否勾选
+     * Check or uncheck checkbox
+     * @param checkboxNumber Checkbox number (1, 2, or 3)
+     * @param check Whether to check
      */
     public FormPage toggleCheckbox(int checkboxNumber, boolean check) {
         By locator;
@@ -80,25 +80,25 @@ public class FormPage extends BasePage {
                 locator = checkbox3Locator;
                 break;
             default:
-                throw new IllegalArgumentException("无效的复选框编号: " + checkboxNumber);
+                throw new IllegalArgumentException("Invalid checkbox number: " + checkboxNumber);
         }
         
         try {
             WebElement checkbox = waitForElementClickable(locator);
-            // 只在当前状态与目标状态不一致时点击
+            // Only click if current state is different from target state
             if ((check && !checkbox.isSelected()) || (!check && checkbox.isSelected())) {
                 checkbox.click();
             }
-            System.out.println("已" + (check ? "勾选" : "取消勾选") + "复选框 " + checkboxNumber);
+            System.out.println((check ? "Checked" : "Unchecked") + " checkbox " + checkboxNumber);
         } catch (Exception e) {
-            System.out.println("操作复选框失败: " + e.getMessage());
+            System.out.println("Failed to operate checkbox: " + e.getMessage());
         }
         return this;
     }
     
     /**
-     * 检查单选按钮是否被选中
-     * @param option 选项编号 (1, 2, 或 3)
+     * Check if radio button is selected
+     * @param option Option number (1, 2, or 3)
      */
     public boolean isRadioButtonSelected(int option) {
         By locator;
@@ -113,20 +113,20 @@ public class FormPage extends BasePage {
                 locator = radioOption3Locator;
                 break;
             default:
-                throw new IllegalArgumentException("无效的选项编号: " + option);
+                throw new IllegalArgumentException("Invalid option number: " + option);
         }
         
         try {
             return driver.findElement(locator).isSelected();
         } catch (NoSuchElementException e) {
-            System.out.println("未找到单选按钮: " + e.getMessage());
+            System.out.println("Radio button not found: " + e.getMessage());
             return false;
         }
     }
     
     /**
-     * 检查复选框是否被选中
-     * @param checkboxNumber 复选框编号 (1, 2, 或 3)
+     * Check if checkbox is selected
+     * @param checkboxNumber Checkbox number (1, 2, or 3)
      */
     public boolean isCheckboxSelected(int checkboxNumber) {
         By locator;
@@ -141,13 +141,13 @@ public class FormPage extends BasePage {
                 locator = checkbox3Locator;
                 break;
             default:
-                throw new IllegalArgumentException("无效的复选框编号: " + checkboxNumber);
+                throw new IllegalArgumentException("Invalid checkbox number: " + checkboxNumber);
         }
         
         try {
             return driver.findElement(locator).isSelected();
         } catch (NoSuchElementException e) {
-            System.out.println("未找到复选框: " + e.getMessage());
+            System.out.println("Checkbox not found: " + e.getMessage());
             return false;
         }
     }
